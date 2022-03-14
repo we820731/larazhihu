@@ -28,13 +28,16 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "tests/helpers.php"
+            "app/helpers.php"
         ]
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "tests/helpers.php"
+        ]
     },
     "scripts": {
         "post-autoload-dump": [
