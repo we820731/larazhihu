@@ -13,6 +13,23 @@ class PostAnswersTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
+    public function guests_may_not_post_an_answer()
+    {
+        // $this->withExceptionHandling();
+        // 未認證的原因導致操作不被允許
+        $this->expectException('Illuminate\Auth\AuthenticationException');
+
+        $question = Question::factory()->published()->create();
+
+        $response = $this->post("/questions/{$question->id}/answers", [
+            'content' => 'This is an answer.'
+        ]);
+
+        $response->assertStatus(302)
+            ->assertRedirect('/login');
+    }
+
+    /** @test */
     public function signed_in_user_can_post_an_answer_to_a_published_question()
     {
         // 假測已存在某個問題
@@ -24,7 +41,7 @@ class PostAnswersTest extends TestCase
         $response = $this->post("/questions/{$question->id}/answers", [
             'content' => 'This is an answer.'
         ]);
-        $response->assertStatus(201);
+        $response->assertStatus(302);
 
         // 我們要看到預期的結果
         $answer = $question->answers()->where('user_id', $user->id)->first();
@@ -36,7 +53,7 @@ class PostAnswersTest extends TestCase
     public function can_not_post_an_answer_to_an_unpublished_question()
     {
         $question = Question::factory()->unpublished()->create();
-        $user = User::factory()->create();
+        $this->actingAs($user = User::factory()->create());
 
         $response = $this->withExceptionHandling()
             ->post("/questions/{$question->id}/answers", [
@@ -56,7 +73,7 @@ class PostAnswersTest extends TestCase
         $this->withExceptionHandling();
 
         $question = Question::factory()->published()->create();
-        $user = User::factory()->create();
+        $this->actingAs($user = User::factory()->create());
 
         $response = $this->post("/questions/{$question->id}/answers", [
             'user_id' => $user->id,
