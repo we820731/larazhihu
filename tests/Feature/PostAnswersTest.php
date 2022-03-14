@@ -15,7 +15,6 @@ class PostAnswersTest extends TestCase
     /** @test */
     public function guests_may_not_post_an_answer()
     {
-        // $this->withExceptionHandling();
         // 未認證的原因導致操作不被允許
         $this->expectException('Illuminate\Auth\AuthenticationException');
 
@@ -34,8 +33,7 @@ class PostAnswersTest extends TestCase
     {
         // 假測已存在某個問題
         $question = Question::factory()->published()->create();
-        // $user = User::factory()->create();
-        $this->actingAs($user = User::factory()->create());
+        $this->signIn($user = create(User::class));
 
         // 我們要觸發某個路由
         $response = $this->post("/questions/{$question->id}/answers", [
@@ -53,7 +51,7 @@ class PostAnswersTest extends TestCase
     public function can_not_post_an_answer_to_an_unpublished_question()
     {
         $question = Question::factory()->unpublished()->create();
-        $this->actingAs($user = User::factory()->create());
+        $this->signIn($user = create(User::class));
 
         $response = $this->withExceptionHandling()
             ->post("/questions/{$question->id}/answers", [
@@ -73,7 +71,7 @@ class PostAnswersTest extends TestCase
         $this->withExceptionHandling();
 
         $question = Question::factory()->published()->create();
-        $this->actingAs($user = User::factory()->create());
+        $this->signIn($user = create(User::class));
 
         $response = $this->post("/questions/{$question->id}/answers", [
             'user_id' => $user->id,
