@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class QuestionFactory extends Factory
@@ -21,5 +22,23 @@ class QuestionFactory extends Factory
             'title' => $this->faker->sentence,
             'content' => $this->faker->text,
         ];
+    }
+
+    public function published()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'published_at' => Carbon::parse('-1 week')
+            ];
+        });
+    }
+
+    public function unpublished()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'published_at' => null
+            ];
+        });
     }
 }
