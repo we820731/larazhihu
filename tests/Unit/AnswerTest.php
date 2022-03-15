@@ -3,6 +3,8 @@
 namespace Tests\Unit;
 
 use App\Models\Answer;
+use App\Models\User;
+use App\Models\Vote;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -48,19 +50,19 @@ class AnswerTest extends TestCase
         $answer = create(Answer::class);
 
         $this->assertDatabaseMissing('votes', [
-            'user_id' => auth()->id(),
-            'voted_id' => $answer->id,
+            'user_id'    => auth()->id(),
+            'voted_id'   => $answer->id,
             'voted_type' => get_class($answer),
-            'type' => 'vote_up',
+            'type'       => 'vote_up',
         ]);
 
         $answer->voteUp(auth()->user());
 
         $this->assertDatabaseHas('votes', [
-            'user_id' => auth()->id(),
-            'voted_id' => $answer->id,
+            'user_id'    => auth()->id(),
+            'voted_id'   => $answer->id,
             'voted_type' => get_class($answer),
-            'type' => 'vote_up',
+            'type'       => 'vote_up',
         ]);
     }
 
@@ -76,9 +78,23 @@ class AnswerTest extends TestCase
         $answer->cancelVoteUp(auth()->user());
 
         $this->assertDatabaseMissing('votes', [
-            'user_id' => auth()->id(),
-            'voted_id' => $answer->id,
-            'voted_type' => get_class($answer)
+            'user_id'    => auth()->id(),
+            'voted_id'   => $answer->id,
+            'voted_type' => get_class($answer),
         ]);
+    }
+
+    /** @test */
+    public function can_know_it_is_voted_up()
+    {
+        $user = create(User::class);
+        $answer = create(Answer::class);
+        create(Vote::class, [
+            'user_id'    => $user->id,
+            'voted_id'   => $answer->id,
+            'voted_type' => get_class($answer),
+        ]);
+
+        $this->assertTrue($answer->refresh()->isVotedUp($user));
     }
 }
