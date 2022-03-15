@@ -67,4 +67,18 @@ class Answer extends Model
             $this->votes('vote_down')->create(['user_id' => $user->id, 'type' => 'vote_down']);
         }
     }
+
+    public function isVotedDown($user)
+    {
+        if (!$user) {
+            return false;
+        }
+
+        return $this->votes('vote_down')->where('user_id', $user->id)->exists();
+    }
+
+    public function getDownVotesCountAttribute()
+    {
+        return $this->votes('vote_down')->count();
+    }
 }

@@ -106,19 +106,34 @@ class AnswerTest extends TestCase
         $answer = create(Answer::class);
 
         $this->assertDatabaseMissing('votes', [
-            'user_id' => auth()->id(),
-            'voted_id' => $answer->id,
+            'user_id'    => auth()->id(),
+            'voted_id'   => $answer->id,
             'voted_type' => get_class($answer),
-            'type' => 'vote_down',
+            'type'       => 'vote_down',
         ]);
 
         $answer->voteDown(auth()->user());
 
         $this->assertDatabaseHas('votes', [
-            'user_id' => auth()->id(),
-            'voted_id' => $answer->id,
+            'user_id'    => auth()->id(),
+            'voted_id'   => $answer->id,
             'voted_type' => get_class($answer),
-            'type' => 'vote_down',
+            'type'       => 'vote_down',
         ]);
+    }
+
+    /** @test */
+    public function can_know_it_is_voted_down()
+    {
+        $user = create(User::class);
+        $answer = create(Answer::class);
+        create(Vote::class, [
+            'user_id'    => $user->id,
+            'voted_id'   => $answer->id,
+            'voted_type' => get_class($answer),
+            'type'       => 'vote_down',
+        ]);
+
+        $this->assertTrue($answer->refresh()->isVotedDown($user));
     }
 }
