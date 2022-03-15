@@ -21,7 +21,7 @@
             @can('update', $question)
               <form action="/answers/{{ $answer->id }}/best" method="POST" accept-charset="UTF-8">
                 {{ csrf_field() }}
-                <button type="submit" class="btn btn-outline-primary btn-sm mt-2">设为最佳</button>
+                <button type="submit" class="btn btn-outline-primary btn-sm mt-2">設為最佳</button>
               </form>
             @endcan
 
