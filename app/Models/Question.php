@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,6 +31,13 @@ class Question extends Model
     {
         $this->update([
             'best_answer_id' => $answer->id
+        ]);
+    }
+
+    public function publish()
+    {
+        $this->update([
+            'published_at' => Carbon::now()
         ]);
     }
 }
