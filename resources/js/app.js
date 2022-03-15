@@ -6,8 +6,17 @@
 
 require('./bootstrap');
 
-// window.Vue = require('vue').default;
-import Vue from 'vue/dist/vue.esm.js'
+// import Vue from 'vue/dist/vue.esm.js'
+window.Vue = require('vue').default;
+window.events = new Vue();
+
+window.flash = function (message) {
+  window.events.$emit('flash', message);
+};
+
+Vue.component('answer', require('./components/Answer').default);
+Vue.component('flash', require('./components/Flash').default);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
