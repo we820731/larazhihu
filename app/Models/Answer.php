@@ -10,6 +10,11 @@ class Answer extends Model
     use HasFactory;
     use Traits\VoteTrait;
 
+    protected $appends = [
+        'upVotesCount',
+        'downVotesCount',
+    ];
+
     protected $guarded = ['id'];
 
     public function isBest()
