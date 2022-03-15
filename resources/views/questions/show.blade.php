@@ -39,7 +39,7 @@
       <div class="card ">
         <div class="card-body">
           <div class="text-center">
-            提問者：Jobs
+            提問者：{{ $question->creator->name }}
           </div>
           <hr>
           <div class="media">
