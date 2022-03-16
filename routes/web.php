@@ -17,8 +17,11 @@ Auth::routes(['verify' => true]);
 
 Route::get('/questions/{category?}', 'QuestionsController@index')->name('questions.index');
 Route::get('/questions/create', 'QuestionsController@create')->name('questions.create');
-Route::get('/questions/{category}/{question}', 'QuestionsController@show');
 Route::post('/questions', 'QuestionsController@store')->name('questions.store');
+Route::get('/questions/{category}/{question}', 'QuestionsController@show');
+
+Route::post('/questions/{question}/subscriptions', 'SubscribeQuestionsController@store')->name('subscribe-questions.store');
+Route::delete('/questions/{question}/subscriptions', 'SubscribeQuestionsController@destroy')->name('subscribe-questions.destroy');
 
 Route::post('/questions/{question}/published-questions', 'PublishedQuestionsController@store')->name('published-questions.store');
 Route::post('/questions/{question}/answers', 'AnswersController@store');
