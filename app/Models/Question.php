@@ -47,4 +47,9 @@ class Question extends Model
 
         return $matches[1];
     }
+
+    public function scopeDrafts($query, $userId)
+    {
+        return $query->where(['user_id' => $userId])->whereNull('published_at');
+    }
 }

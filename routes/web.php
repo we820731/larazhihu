@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::get('/questions', 'QuestionsController@index');
 Route::get('/questions/create', 'QuestionsController@create')->name('questions.create');
@@ -31,5 +32,5 @@ Route::delete('/answers/{answer}/up-votes', 'AnswerUpVotesController@destroy')->
 Route::post('/answers/{answer}/down-votes', 'AnswerDownVotesController@store')->name('answer-down-votes.store');
 Route::delete('/answers/{answer}/down-votes', 'AnswerDownVotesController@destroy')->name('answer-down-votes.destroy');
 
+Route::get('/drafts', 'DraftsController@index');
 
-Auth::routes(['verify' => true]);
