@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Question;
 use App\Models\User;
+use App\Filters\QuestionFilter;
 use Illuminate\Http\Request;
 
 class QuestionsController extends Controller
@@ -16,7 +17,7 @@ class QuestionsController extends Controller
         $this->middleware('must-verify-email')->except(['index', 'show']);
     }
 
-    public function index(Category $category)
+    public function index(Category $category, QuestionFilter $filters)
     {
         if ($category->exists) {
             $questions = Question::published()->where('category_id', $category->id);
@@ -24,13 +25,13 @@ class QuestionsController extends Controller
             $questions = Question::published();
         }
 
-        if($username = request('by')) {
-            $user = User::whereName($username)->firstOrFail();
+        // if($username = request('by')) {
+        //     $user = User::whereName($username)->firstOrFail();
+        //
+        //     $questions->where('user_id', $user->id);
+        // }
 
-            $questions->where('user_id', $user->id);
-        }
-
-        $questions = $questions->paginate(20);
+        $questions = $questions->filter($filters)->paginate(20);
 
         return view('questions.index', [
             'questions' => $questions,

@@ -52,4 +52,9 @@ class Question extends Model
     {
         return $query->where(['user_id' => $userId])->whereNull('published_at');
     }
+
+    public function scopeFilter($query, $filters)
+    {
+        return $filters->apply($query);
+    }
 }
