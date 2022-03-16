@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
 {
+    use Traits\VoteTrait;
     use HasFactory;
 
     protected $guarded = ['id'];

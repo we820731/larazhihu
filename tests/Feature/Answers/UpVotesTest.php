@@ -17,7 +17,7 @@ class UpVotesTest extends TestCase
         return Answer::class;
     }
 
-    protected function getVoteUpUri($answer = null)
+    protected function getVoteUpUri($answer = null): string
     {
         return $answer ? "/answers/{$answer->id}/up-votes" : '/answers/1/up-votes';
     }
