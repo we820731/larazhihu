@@ -47,9 +47,10 @@ class QuestionsController extends Controller
         ]);
     }
 
-    public function show($questionId)
+    public function show($category, $questionId)
     {
         $question = Question::published()->findOrFail($questionId);
+
         $answers = $question->answers()->paginate(20);
 
         array_map(function ($item) {
@@ -58,7 +59,7 @@ class QuestionsController extends Controller
 
         return view('questions.show', [
             'question' => $question,
-            'answers'  => $answers,
+            'answers' => $answers
         ]);
     }
 

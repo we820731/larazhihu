@@ -22,6 +22,7 @@ class CreateQuestionsTable extends Migration
             $table->unsignedInteger('best_answer_id')->nullable();
             $table->unsignedInteger('category_id');
             $table->timestamps();
+            $table->unsignedInteger('answers_count')->default(0);
         });
     }
 

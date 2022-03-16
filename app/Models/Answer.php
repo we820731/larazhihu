@@ -10,12 +10,21 @@ class Answer extends Model
     use HasFactory;
     use Traits\VoteTrait;
 
+    protected $guarded = ['id'];
+
     protected $appends = [
         'upVotesCount',
         'downVotesCount',
     ];
 
-    protected $guarded = ['id'];
+    protected static function boot()
+    {
+        parent::boot(); //
+
+        static::created(function ($reply) {
+            $reply->question->increment('answers_count');
+        });
+    }
 
     public function isBest()
     {
