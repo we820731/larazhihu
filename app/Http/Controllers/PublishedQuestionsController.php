@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\User;
 use App\Notifications\YouWereInvited;
+use App\Events\PublishQuestion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -19,20 +20,12 @@ class PublishedQuestionsController extends Controller
     {
         $this->authorize('update', $question);
 
-        // Inspect the body of the reply for the username mentions
-        preg_match_all('/@([^\s.]+)/',$question->content,$matches);
-
-        $names = $matches[1];
-
-        // And then notify user
-        foreach ($names as $name){
-            $user = User::whereName($name)->first();
-
-            if($user){
-                $user->notify(new YouWereInvited($question));
-            }
-        }
+        $names = $question->invitedUsers();
 
         $question->publish();
+
+        event(new PublishQuestion($question));
+
+        return redirect("/questions/{$question->id}")->with('flash', "發佈成功！");
     }
 }
